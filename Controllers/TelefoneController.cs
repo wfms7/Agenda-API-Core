@@ -52,6 +52,22 @@ namespace WebNotebook.Controllers
             return NotFound();
         }
 
+        [HttpGet("tel/{id}")]
+
+        public IActionResult RecuperaTelefoneID(int id)
+        {
+            ReadTelefoneDto readDto = _telefoneService.RecuperaTelefoneID(id);
+            if(readDto != null)
+                {
+
+                return Ok(readDto);
+
+            }
+
+            return NotFound();
+
+        }
+
 
         
 

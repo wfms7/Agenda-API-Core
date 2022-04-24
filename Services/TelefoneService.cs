@@ -58,6 +58,18 @@ namespace WebNotebook.Services
 
         }
 
+        internal ReadTelefoneDto RecuperaTelefoneID(int id)
+        {
+            Telefone telefone;
+
+           
+                telefone = _appDbContext.Telefones.FirstOrDefault(t => t.Id == id);
+                return _mapper.Map<ReadTelefoneDto>(telefone);
+            
+
+            
+        }
+
         public Result AtulizaTelefone(int id, UpdateTelefoneDto telefoneDto)
         {
             Telefone telefone = _appDbContext.Telefones.FirstOrDefault(t => t.Id == id);
