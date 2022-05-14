@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebNotebook.Data.Dto.Especialidade;
 using WebNotebook.Data.Dto.EspecialidadeMedica;
 using WebNotebook.Services;
 
@@ -33,10 +34,10 @@ namespace WebNotebook.Controllers
 
         [HttpGet]
 
-        public IActionResult RecuperarEspecialidade([FromQuery] string nome = null, int skip =0 , int take = 10)
+        public IActionResult RecuperarEspecialidade([FromQuery] string nome = null, int skip = 0, int take = 10)
         {
-           List<ReadEspecialidadeDto> read = _especilidadeService.RecuperarEspecialidade(nome, skip,take);
-            if (read!=null)
+            List<ReadEspecialidadeDto> read = _especilidadeService.RecuperarEspecialidade(nome, skip, take);
+            if (read != null)
             {
                 return Ok(read);
             }
@@ -65,7 +66,7 @@ namespace WebNotebook.Controllers
 
         [HttpPut("{id}")]
 
-        public IActionResult AtualizarEspecialidade (int id, [FromBody] UpdateEspecialidade Dto)
+        public IActionResult AtualizarEspecialidade(int id, [FromBody] UpdateEspecialidade Dto)
         {
 
             Result result = _especilidadeService.AtualizarEspecialidade(id, Dto);
@@ -89,6 +90,50 @@ namespace WebNotebook.Controllers
 
             return Ok();
 
+        }
+
+        [HttpPost("add")]
+
+        public IActionResult incluirEspecialidadeDR([FromQuery] int userId, int espId)
+        {
+
+            AddEspecialidadeDrDto dto = new AddEspecialidadeDrDto { ApplicationUserId = userId, EspecialidadeId = espId };
+            Result result = _especilidadeService.incluirEspecialidadeDR(dto);
+
+            return result.IsFailed ? BadRequest(result.ToString()): Ok();
+
+        }
+
+        [HttpDelete("deletar")]
+
+        public IActionResult deletarEspecialidadeDR([FromQuery] int userId, int espId)
+        {
+            AddEspecialidadeDrDto dto = new AddEspecialidadeDrDto { ApplicationUserId = userId, EspecialidadeId = espId };
+            Result result = _especilidadeService.deletarEspecialidadeDR(dto);
+
+            return result.IsFailed ? BadRequest() : Ok();
+        }
+
+        [HttpGet("especialidadeDR")]
+
+        public IActionResult recuperarEspecialidadeDR([FromQuery] int userId, int espId)
+        {
+            AddEspecialidadeDrDto dto = new AddEspecialidadeDrDto { ApplicationUserId = userId, EspecialidadeId = espId };
+            ReadEspecialidadeDrDto read = _especilidadeService.recuperarEspecialidadeDR(dto);
+
+
+
+            return read == null ? NotFound(): Ok(read);
+
+        }
+
+        [HttpGet("especialidadeDR/{id}")]
+
+        public IActionResult recuperarEspecilidadeDRall([FromRoute] int id)
+        {
+            List<ReadEspecialidadeDrDto> read = _especilidadeService.recuperarEspecilidadeDRall(id);
+
+            return Ok(read);
         }
 
 

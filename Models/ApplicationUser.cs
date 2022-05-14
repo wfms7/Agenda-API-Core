@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace WebNotebook.Models
@@ -20,5 +21,8 @@ namespace WebNotebook.Models
         public string NomeMae { get; set; }
 
         public string NomePai { get; set; }
+
+        [JsonIgnore]
+        public virtual List<EspecialidadeDR> EspecialidadeDRs { get; set; }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebNotebook.Data;
+using WebNotebook.Data.Dto.Especialidade;
 using WebNotebook.Data.Dto.EspecialidadeMedica;
 using WebNotebook.Models;
 
@@ -54,7 +56,7 @@ namespace WebNotebook.Services
 
         }
 
-        internal Result AtualizarEspecialidade(int id, UpdateEspecialidade dto)
+        public Result AtualizarEspecialidade(int id, UpdateEspecialidade dto)
         {
 
             Especialidade especialidade = _appContext.Especialidade.FirstOrDefault(s => s.Id == id);
@@ -70,7 +72,7 @@ namespace WebNotebook.Services
 
         }
 
-        internal Result DeletarEspecilidade(int id)
+        public Result DeletarEspecilidade(int id)
         {
             Especialidade especialidade = _appContext.Especialidade.FirstOrDefault(s=> s.Id == id);
 
@@ -84,5 +86,89 @@ namespace WebNotebook.Services
 
             return Result.Ok();
         }
+
+        public Result incluirEspecialidadeDR(AddEspecialidadeDrDto dto)
+        {
+
+            EspecialidadeDR especialidadeDR = _mapper.Map<EspecialidadeDR>(dto);
+
+            try
+            {
+                _appContext.EspecialidadeDRs.Add(especialidadeDR);
+                _appContext.SaveChanges();
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Result.Fail(ex.InnerException.Message.ToString());
+            }
+
+
+         
+            
+        }
+
+        public Result deletarEspecialidadeDR(AddEspecialidadeDrDto dto)
+        {
+
+            EspecialidadeDR especialidadeDR = _appContext.EspecialidadeDRs.Include(e=> e.Especialidade).Include(e=>e.ApplicationUser).FirstOrDefault(e=> e.ApplicationUserId ==dto.ApplicationUserId && e.EspecialidadeId == dto.EspecialidadeId );
+
+            if (especialidadeDR == null)
+            {
+                return Result.Fail("Especialidade nãe encontrada");
+            }
+
+            _appContext.EspecialidadeDRs.Remove(especialidadeDR);
+            _appContext.SaveChanges();
+
+            return Result.Ok();
+        }
+
+        public ReadEspecialidadeDrDto recuperarEspecialidadeDR(AddEspecialidadeDrDto dto)
+        {
+            EspecialidadeDR especialidadeDR = _appContext.EspecialidadeDRs.Include(e => e.Especialidade).Include(e => e.ApplicationUser).FirstOrDefault(e => e.ApplicationUserId == dto.ApplicationUserId && e.EspecialidadeId == dto.EspecialidadeId);
+
+            ReadEspecialidadeDrDto read = new ReadEspecialidadeDrDto();
+
+            if (read != null)
+            {
+                read.ApplicationUserId = especialidadeDR.ApplicationUserId;
+                read.Nome = especialidadeDR.ApplicationUser.Nome;
+                read.EspecialidadeId = especialidadeDR.EspecialidadeId;
+                read.Especialidades = especialidadeDR.Especialidade.Especialidades;
+                
+            }
+
+            return read;
+        }
+
+        public List<ReadEspecialidadeDrDto> recuperarEspecilidadeDRall(int id)
+        {
+            List<EspecialidadeDR> especialidadeDR = _appContext.EspecialidadeDRs.Include(e=>e.ApplicationUser).Include(e=>e.Especialidade).Where(e=> e.ApplicationUserId == id).ToList();
+            List<ReadEspecialidadeDrDto> read = new List<ReadEspecialidadeDrDto>();
+
+            if (especialidadeDR == null)
+            {
+                return read;
+            }
+
+            foreach (var dr in especialidadeDR)
+            {
+                read.Add(new ReadEspecialidadeDrDto { 
+                ApplicationUserId =dr.ApplicationUserId,
+                EspecialidadeId = dr.EspecialidadeId,
+                Especialidades= dr.Especialidade.Especialidades,
+                Nome = dr.ApplicationUser.Nome
+                
+                }); 
+            }
+
+            return read;
+
+        }
+
+    
     }
 }
