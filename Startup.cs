@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebNotebook.Data;
+using WebNotebook.Models;
 using WebNotebook.Services;
 
 namespace WebNotebook
@@ -35,6 +37,7 @@ namespace WebNotebook
             services.AddDbContext<AppDbContext>(opst => opst
             //.UseLazyLoadingProxies()
             .UseMySQL(Configuration.GetConnectionString("PacienteConnection")));
+           
 
             services.AddCors( options => options.AddPolicy("AllowAcess_to_API", policy => policy
             .AllowAnyOrigin()
@@ -43,10 +46,13 @@ namespace WebNotebook
             ));
 
 
-
-
+            services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(opt => opt.SignIn.RequireConfirmedEmail = false).AddEntityFrameworkStores<AppDbContext>();
+            services.AddScoped<RolesService, RolesService>();
+            services.AddScoped<UsuarioService, UsuarioService>();
             services.AddScoped<PacienteService, PacienteService>();
             services.AddScoped<TelefoneService, TelefoneService>();
+            services.AddScoped<EspecialidadeService, EspecialidadeService>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>

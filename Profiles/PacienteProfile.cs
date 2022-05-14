@@ -1,8 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebNotebook.Data.Dto;
 using WebNotebook.Data.Dto.Paciente;
 using WebNotebook.Models;
