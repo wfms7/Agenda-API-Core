@@ -24,5 +24,14 @@ namespace WebNotebook.Models
 
         [JsonIgnore]
         public virtual List<EspecialidadeDR> EspecialidadeDRs { get; set; }
+
+      
+        [JsonIgnore]
+        public virtual List<AgendaCalendario> AgendaCalendarios { get; set; }
+
+        [JsonIgnore]
+        public virtual List<Consulta> Consultas { get; set; }
+
+
     }
 }

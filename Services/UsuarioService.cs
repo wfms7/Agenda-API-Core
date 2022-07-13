@@ -29,8 +29,13 @@ namespace WebNotebook.Services
             _roleManager = roleManager;
         }
 
-        public Result criaUsuario(CreateUsuarioDto dto)
+        public async Task<Result> criaUsuarioAsync(CreateUsuarioDto dto)
         {
+            
+            if ( !await _roleManager.RoleExistsAsync(dto.Role))
+            {
+                return Result.Fail("Role incorreta");
+            }
 
             Usuario usuario = _mapper.Map<Usuario>(dto);
             ApplicationUser criaUser = _mapper.Map<ApplicationUser>(usuario);
@@ -51,10 +56,31 @@ namespace WebNotebook.Services
         public List<ReadUsuarioDto> recuperarUsuario(int skip, int take)
         {
             List<ApplicationUser> usuarioApp = _userManager.Users.Skip(skip).Take(take).ToList();
-            List<Usuario> usuarios =  new List<Usuario>();
+            List<ReadUsuarioDto> usuarios =  new List<ReadUsuarioDto>();
+
+                             
             foreach (var user in usuarioApp)
             {
-                usuarios.Add(new Usuario
+                Roles Addroles = new Roles();
+
+                var userRole = _context.UserRoles.FirstOrDefault(x => x.UserId == user.Id);
+                if (userRole != null)
+                {
+
+                
+                var roles = _context.Roles.FirstOrDefault(r => r.Id == userRole.RoleId);
+              
+
+
+                if (roles!=null)
+                {
+                    Addroles.Id = roles.Id;
+                    Addroles.Name = roles.Name;
+                    Addroles.NormalizedName = roles.NormalizedName;
+                }
+
+                }
+                usuarios.Add(new ReadUsuarioDto
                 {
                     Id = user.Id,
                     Nome = user.Nome,
@@ -65,13 +91,18 @@ namespace WebNotebook.Services
                     NomeMae = user.NomeMae,
                     NomePai = user.NomePai,
                     RG = user.RG,
-                    Username = user.UserName
+                    Username = user.UserName,
+                    Roles = Addroles
 
-                }) ;
+                });
+
+               
+              
+             
             }
 
 
-            return _mapper.Map<List<ReadUsuarioDto>>(usuarios);
+            return usuarios;
 
 
         }
@@ -79,7 +110,7 @@ namespace WebNotebook.Services
         public ReadUsuarioDto recuperaUsuarioPorId(int id)
         {
             ApplicationUser applicationUser = _userManager.Users.FirstOrDefault(usu => usu.Id == id);
-            Usuario usuarios = new Usuario();
+            ReadUsuarioDto usuarios = new ReadUsuarioDto();
 
             if (applicationUser == null)
             {
@@ -88,6 +119,27 @@ namespace WebNotebook.Services
                 return null;
 
             }
+
+            Roles Addroles = new Roles();
+
+            var userRole = _context.UserRoles.FirstOrDefault(x => x.UserId == applicationUser.Id);
+            if (userRole != null)
+            {
+
+
+                var roles = _context.Roles.FirstOrDefault(r => r.Id == userRole.UserId);
+
+
+
+                if (roles != null)
+                {
+                    Addroles.Id = roles.Id;
+                    Addroles.Name = roles.Name;
+                    Addroles.NormalizedName = roles.NormalizedName;
+                }
+
+            }
+
             usuarios.Id = applicationUser.Id;
             usuarios.Nome = applicationUser.Nome;
             usuarios.CPF = applicationUser.CPF;
@@ -98,11 +150,12 @@ namespace WebNotebook.Services
             usuarios.NomePai = applicationUser.NomePai;
             usuarios.RG = applicationUser.RG;
             usuarios.Username = applicationUser.UserName;
+            usuarios.Roles = Addroles;
 
 
 
 
-            return _mapper.Map<ReadUsuarioDto>(usuarios);
+            return usuarios;
 
         }
 
@@ -145,7 +198,10 @@ namespace WebNotebook.Services
                     
                 }
             }
-           
+           if(usuarioRule.Count == 0)
+            {
+                _userManager.AddToRoleAsync(applicationUser, dto.Role);
+            }
            
 
             if (result.Succeeded)

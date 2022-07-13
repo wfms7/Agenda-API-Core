@@ -116,10 +116,10 @@ namespace WebNotebook.Controllers
 
         [HttpGet("especialidadeDR")]
 
-        public IActionResult recuperarEspecialidadeDR([FromQuery] int userId, int espId)
+        public IActionResult getEspecialidadeDRIdEspecialidadeEDotor([FromQuery] int userId, int espId)
         {
             AddEspecialidadeDrDto dto = new AddEspecialidadeDrDto { ApplicationUserId = userId, EspecialidadeId = espId };
-            ReadEspecialidadeDrDto read = _especilidadeService.recuperarEspecialidadeDR(dto);
+            ReadEspecialidadeDrDto read = _especilidadeService.getEspecialidadeDRIdEspecialidadeEDotor(dto);
 
 
 
@@ -129,9 +129,9 @@ namespace WebNotebook.Controllers
 
         [HttpGet("especialidadeDR/{id}")]
 
-        public IActionResult recuperarEspecilidadeDRall([FromRoute] int id)
+        public IActionResult getEspecilidadeDRPorIdDotor([FromRoute] int id)
         {
-            List<ReadEspecialidadeDrDto> read = _especilidadeService.recuperarEspecilidadeDRall(id);
+            List<ReadEspecialidadeDrDto> read = _especilidadeService.recuperarEspecilidadeDRPorIdDotor(id);
 
             return Ok(read);
         }

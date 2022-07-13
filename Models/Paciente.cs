@@ -43,5 +43,10 @@ namespace WebNotebook.Models
         public string Email { get; set; }
 
 
+        
+        [JsonIgnore]
+        public virtual List<Consulta> Consultas { get; set; }
+
+
     }
 }

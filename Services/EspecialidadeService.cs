@@ -126,9 +126,9 @@ namespace WebNotebook.Services
             return Result.Ok();
         }
 
-        public ReadEspecialidadeDrDto recuperarEspecialidadeDR(AddEspecialidadeDrDto dto)
+        public ReadEspecialidadeDrDto getEspecialidadeDRIdEspecialidadeEDotor(AddEspecialidadeDrDto dto)
         {
-            EspecialidadeDR especialidadeDR = _appContext.EspecialidadeDRs.Include(e => e.Especialidade).Include(e => e.ApplicationUser).FirstOrDefault(e => e.ApplicationUserId == dto.ApplicationUserId && e.EspecialidadeId == dto.EspecialidadeId);
+           EspecialidadeDR especialidadeDR = _appContext.EspecialidadeDRs.Include(e => e.Especialidade).Include(e => e.ApplicationUser).FirstOrDefault(e => e.ApplicationUserId == dto.ApplicationUserId && e.EspecialidadeId == dto.EspecialidadeId);
 
             ReadEspecialidadeDrDto read = new ReadEspecialidadeDrDto();
 
@@ -144,7 +144,7 @@ namespace WebNotebook.Services
             return read;
         }
 
-        public List<ReadEspecialidadeDrDto> recuperarEspecilidadeDRall(int id)
+        public List<ReadEspecialidadeDrDto> recuperarEspecilidadeDRPorIdDotor(int id)
         {
             List<EspecialidadeDR> especialidadeDR = _appContext.EspecialidadeDRs.Include(e=>e.ApplicationUser).Include(e=>e.Especialidade).Where(e=> e.ApplicationUserId == id).ToList();
             List<ReadEspecialidadeDrDto> read = new List<ReadEspecialidadeDrDto>();

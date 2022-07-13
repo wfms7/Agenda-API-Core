@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebNotebook.Data;
 
 namespace WebNotebook.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220520012153_Add AgendaCalendario")]
+    partial class AddAgendaCalendario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,17 +157,14 @@ namespace WebNotebook.Migrations
                     b.Property<bool>("Friday")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("HoraFim")
-                        .HasColumnType("datetime");
+                    b.Property<string>("HoraFim")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("HoraIncio")
-                        .HasColumnType("datetime");
+                    b.Property<string>("HoraIncio")
+                        .HasColumnType("text");
 
                     b.Property<bool>("Monday")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("NomeAgenda")
-                        .HasColumnType("text");
 
                     b.Property<int>("QuantidadeDia")
                         .HasColumnType("int");
@@ -276,38 +275,6 @@ namespace WebNotebook.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("WebNotebook.Models.Consulta", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("AgendaCalendarioId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ApplicationUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DataConsulta")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AgendaCalendarioId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("PacienteId");
-
-                    b.ToTable("Consultas");
                 });
 
             modelBuilder.Entity("WebNotebook.Models.Especialidade", b =>
@@ -473,33 +440,6 @@ namespace WebNotebook.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("WebNotebook.Models.Consulta", b =>
-                {
-                    b.HasOne("WebNotebook.Models.AgendaCalendario", "AgendaCalendarios")
-                        .WithMany("Consultas")
-                        .HasForeignKey("AgendaCalendarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebNotebook.Models.ApplicationUser", "ApplicationUsers")
-                        .WithMany("Consultas")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebNotebook.Models.Paciente", "Pacientes")
-                        .WithMany("Consultas")
-                        .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AgendaCalendarios");
-
-                    b.Navigation("ApplicationUsers");
-
-                    b.Navigation("Pacientes");
-                });
-
             modelBuilder.Entity("WebNotebook.Models.EspecialidadeDR", b =>
                 {
                     b.HasOne("WebNotebook.Models.ApplicationUser", "ApplicationUser")
@@ -530,16 +470,9 @@ namespace WebNotebook.Migrations
                     b.Navigation("Paciente");
                 });
 
-            modelBuilder.Entity("WebNotebook.Models.AgendaCalendario", b =>
-                {
-                    b.Navigation("Consultas");
-                });
-
             modelBuilder.Entity("WebNotebook.Models.ApplicationUser", b =>
                 {
                     b.Navigation("AgendaCalendarios");
-
-                    b.Navigation("Consultas");
 
                     b.Navigation("EspecialidadeDRs");
                 });
@@ -551,8 +484,6 @@ namespace WebNotebook.Migrations
 
             modelBuilder.Entity("WebNotebook.Models.Paciente", b =>
                 {
-                    b.Navigation("Consultas");
-
                     b.Navigation("Telefones");
                 });
 #pragma warning restore 612, 618

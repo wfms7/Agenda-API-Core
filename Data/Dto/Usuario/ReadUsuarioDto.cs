@@ -22,5 +22,7 @@ namespace WebNotebook.Data.Dto.Usuario
         public string NomeMae { get; set; }
 
         public string NomePai { get; set; }
+
+        public WebNotebook.Models.Roles Roles { get; set; }
     }
 }

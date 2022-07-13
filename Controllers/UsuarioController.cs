@@ -25,9 +25,9 @@ namespace WebNotebook.Controllers
 
         public IActionResult criaUsuario (CreateUsuarioDto dto)
         {
-             Result  resultado  = _usuarioService.criaUsuario(dto);
+           Task < Result>  resultado  = _usuarioService.criaUsuarioAsync(dto);
 
-            return resultado.IsFailed ? BadRequest(resultado.ToString()) : Ok();
+            return resultado.Result.IsFailed ? BadRequest(resultado.Result.ToString()) : Ok();
 
         }
 

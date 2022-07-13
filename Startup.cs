@@ -53,6 +53,9 @@ namespace WebNotebook
             services.AddScoped<PacienteService, PacienteService>();
             services.AddScoped<TelefoneService, TelefoneService>();
             services.AddScoped<EspecialidadeService, EspecialidadeService>();
+            services.AddScoped<AgendaCalendarioService, AgendaCalendarioService>();
+            services.AddScoped<Status, Status>();
+            services.AddScoped<ConsultaService, ConsultaService>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
